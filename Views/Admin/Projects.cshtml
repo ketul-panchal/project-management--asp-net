@@ -1,0 +1,41 @@
+@model IEnumerable<PMS.Models.Project>
+@{
+    ViewData["Title"] = "Projects - Admin";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // Admin Layout
+}
+
+<h2 class="mb-4">All Projects</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Project Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Created By</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var project in Model)
+        {
+            <tr>
+                <td>@project.ProjectName</td>
+                <td>@project.Description</td>
+                <td>@project.Status</td>
+                <td>@project.Priority</td>
+                <td>@project.StartDate.ToShortDateString()</td>
+                <td>@project.EndDate.ToShortDateString()</td>
+                <td>@project.CreatedBy</td>
+                <td>
+                    <a asp-action="ProjectDetails" asp-route-id="@project.Id" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="EditProject" asp-route-id="@project.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="DeleteProject" asp-route-id="@project.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

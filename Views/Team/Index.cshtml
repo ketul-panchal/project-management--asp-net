@@ -1,0 +1,192 @@
+@model IEnumerable<PMS.Models.TeamMember>
+
+@{
+    ViewData["Title"] = "Team";
+    // Dynamically set layout based on user role
+    Layout = User.IsInRole("Admin") ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_ProjectManagerLayout.cshtml";
+
+    var query = ViewContext.HttpContext.Request.Query;
+    var qSearch = query["search"].ToString() ?? "";
+    var qRole = query["role"].ToString() ?? "";
+}
+
+<style>
+    .team-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .team-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .stat-card {
+        border-left: 4px solid;
+        padding: 1.5rem;
+    }
+    .avatar-circle {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+</style>
+
+<!-- Header -->
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-3">
+    <div>
+        <h1 class="h2 mb-1">Team</h1>
+        <p class="text-muted mb-0">Manage your team members</p>
+    </div>
+    <a href="/Team/Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-2"></i>Add Member
+    </a>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm" style="border-left-color: #6c757d;">
+            <div class="text-center">
+                <div class="h2 fw-bold text-dark mb-1">@ViewBag.TotalMembers</div>
+                <div class="text-muted small">Total Members</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm" style="border-left-color: #198754;">
+            <div class="text-center">
+                <div class="h2 fw-bold text-success mb-1">@ViewBag.ActiveMembers</div>
+                <div class="text-muted small">Active</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm" style="border-left-color: #0d6efd;">
+            <div class="text-center">
+                <div class="h2 fw-bold text-primary mb-1">@ViewBag.Developers</div>
+                <div class="text-muted small">Developers</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card stat-card border-0 shadow-sm" style="border-left-color: #6f42c1;">
+            <div class="text-center">
+                <div class="h2 fw-bold text-purple mb-1">@ViewBag.Designers</div>
+                <div class="text-muted small">Designers</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4 border-0 shadow-sm">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-lg-8">
+                <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" 
+                           name="search" 
+                           class="form-control border-start-0" 
+                           placeholder="Search team members..."
+                           value="@qSearch">
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <select name="role" class="form-select">
+                    <option value="">All Roles</option>
+                    <option value="Project Manager" selected="@(qRole == "Project Manager")">Project Manager</option>
+                    <option value="Developer" selected="@(qRole == "Developer")">Developer</option>
+                    <option value="Designer" selected="@(qRole == "Designer")">Designer</option>
+                    <option value="Tester" selected="@(qRole == "Tester")">Tester</option>
+                </select>
+            </div>
+            <div class="col-lg-1">
+                <button type="submit" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-funnel"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Team Members Grid -->
+@if (Model != null && Model.Any())
+{
+    <div class="row g-4">
+        @foreach (var member in Model)
+        {
+            <div class="col-lg-4 col-md-6">
+                <div class="card team-card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <!-- Header with Avatar -->
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="@member.Avatar" 
+                                 alt="@member.Name" 
+                                 class="avatar-circle me-3">
+                            <div class="flex-grow-1">
+                                <h5 class="card-title mb-1">
+                                    <a href="/Team/Details/@member.Id" class="text-decoration-none text-dark">
+                                        @member.Name
+                                    </a>
+                                </h5>
+                                <p class="text-muted small mb-0">@member.Role</p>
+                            </div>
+                        </div>
+
+                        <!-- Contact Info -->
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center text-muted small mb-2">
+                                <i class="bi bi-envelope me-2"></i>
+                                <span class="text-truncate">@member.Email</span>
+                            </div>
+                            @if (!string.IsNullOrEmpty(member.Phone))
+                            {
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="bi bi-telephone me-2"></i>
+                                    <span>@member.Phone</span>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <span class="badge bg-@(member.Status == "active" ? "success" : "warning")">
+                                @member.Status
+                            </span>
+                            <small class="text-muted">
+                                Joined @member.JoinDate.ToString("MMM dd, yyyy")
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="text-center py-5">
+        <i class="bi bi-people display-1 text-muted mb-3"></i>
+        <h4 class="text-muted mb-3">No team members found</h4>
+        <p class="text-muted mb-4">Get started by adding your first team member</p>
+        <a href="/Team/Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-2"></i>Add First Member
+        </a>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Show success message if exists
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+            document.addEventListener('DOMContentLoaded', function() {
+                alert('@TempData["SuccessMessage"]');
+            });
+            </text>
+        }
+    </script>
+}

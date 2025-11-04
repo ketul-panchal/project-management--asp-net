@@ -1,0 +1,84 @@
+@model PMS.Models.TaskItem
+@using PMS.Models
+@using TaskStatusEnum = PMS.Models.TaskStatus
+
+@{
+    ViewData["Title"] = "Create Task";
+    // Dynamically set layout based on user role
+    Layout = User.IsInRole("Admin") ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_ProjectManagerLayout.cshtml";
+}
+
+<h2>Create Task</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label asp-for="Title" class="form-label">Title</label>
+                            <input asp-for="Title" class="form-control" required />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="ProjectId" class="form-label">Project</label>
+                            @Html.DropDownList("ProjectId", ViewBag.ProjectItems as SelectList, "-- Select Project --", new { @class = "form-select" })
+                            <span asp-validation-for="ProjectId" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="Status" class="form-label">Status</label>
+                            <select asp-for="Status" asp-items="Html.GetEnumSelectList<TaskStatusEnum>()" class="form-select"></select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="Priority" class="form-label">Priority</label>
+                            <select asp-for="Priority" asp-items="Html.GetEnumSelectList<TaskPriority>()" class="form-select"></select>
+                            <span asp-validation-for="Priority" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="DueDate" class="form-label">Due Date</label>
+                            <input asp-for="DueDate" type="date" class="form-control" />
+                            <span asp-validation-for="DueDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="Assignee" class="form-label">Assignee</label>
+                            <input asp-for="Assignee" class="form-control" placeholder="Name or email" />
+                            <span asp-validation-for="Assignee" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="TagsCsv" class="form-label">Tags (comma separated)</label>
+                            <input asp-for="TagsCsv" class="form-control" placeholder="bug, feature, urgent" />
+                            <span asp-validation-for="TagsCsv" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12 d-flex gap-2 mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check2"></i> Create Task
+                            </button>
+                            <a href="/Tasks" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

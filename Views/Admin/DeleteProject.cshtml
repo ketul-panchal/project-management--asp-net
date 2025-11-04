@@ -1,0 +1,18 @@
+@model PMS.Models.Project
+@{
+    ViewData["Title"] = "Delete Project";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Delete Project</h2>
+
+<div class="alert alert-danger">
+    <h4>Are you sure you want to delete this project?</h4>
+    <p><strong>@Model.ProjectName</strong></p>
+</div>
+
+<form asp-action="DeleteProjectConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Projects" class="btn btn-secondary">Cancel</a>
+</form>

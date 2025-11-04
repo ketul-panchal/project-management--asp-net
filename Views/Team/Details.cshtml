@@ -1,0 +1,90 @@
+@model PMS.Models.TeamMember
+
+@{
+    ViewData["Title"] = Model.Name;
+    // Dynamically set layout based on user role
+    Layout = User.IsInRole("Admin") ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_ProjectManagerLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Back Button -->
+        <div class="mb-4">
+            <a href="/Team" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-2"></i>Back to Team
+            </a>
+        </div>
+
+        <!-- Member Details Card -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <!-- Header with Avatar -->
+                <div class="text-center mb-4 pb-4 border-bottom">
+                    <img src="@Model.Avatar" 
+                         alt="@Model.Name" 
+                         class="rounded-circle mb-3"
+                         style="width: 120px; height: 120px;">
+                    <h2 class="mb-1">@Model.Name</h2>
+                    <p class="text-muted mb-2">@Model.Role</p>
+                    <span class="badge bg-@(Model.Status == "active" ? "success" : "warning") px-3 py-2">
+                        @Model.Status
+                    </span>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded me-3">
+                                <i class="bi bi-envelope text-primary fs-4"></i>
+                            </div>
+                            <div>
+                                <div class="text-muted small mb-1">Email</div>
+                                <div class="fw-semibold">@Model.Email</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Phone))
+                    {
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start">
+                                <div class="bg-success bg-opacity-10 p-3 rounded me-3">
+                                    <i class="bi bi-telephone text-success fs-4"></i>
+                                </div>
+                                <div>
+                                    <div class="text-muted small mb-1">Phone</div>
+                                    <div class="fw-semibold">@Model.Phone</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-info bg-opacity-10 p-3 rounded me-3">
+                                <i class="bi bi-calendar-check text-info fs-4"></i>
+                            </div>
+                            <div>
+                                <div class="text-muted small mb-1">Join Date</div>
+                                <div class="fw-semibold">@Model.JoinDate.ToString("MMMM dd, yyyy")</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-start">
+                            <div class="bg-warning bg-opacity-10 p-3 rounded me-3">
+                                <i class="bi bi-briefcase text-warning fs-4"></i>
+                            </div>
+                            <div>
+                                <div class="text-muted small mb-1">Role</div>
+                                <div class="fw-semibold">@Model.Role</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

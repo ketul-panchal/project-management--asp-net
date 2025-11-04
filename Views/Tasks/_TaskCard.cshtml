@@ -1,0 +1,45 @@
+@model PMS.Controllers.TasksController.TaskListItemVm
+
+@{
+    var priorityClass = $"priority-{Model.Priority}";
+    var isOverdue = Model.DueDate.HasValue && Model.DueDate.Value < DateTime.Now && Model.Status != PMS.Models.TaskStatus.Done;
+}
+
+<div class="task-card @priorityClass" data-task-id="@Model.Id">
+    <div class="task-title">@Model.Title</div>
+    
+    @if (!string.IsNullOrEmpty(Model.Description))
+    {
+        <div class="task-description">@Model.Description</div>
+    }
+    
+    <div class="task-meta">
+        <span class="task-badge task-priority @priorityClass">
+            @Model.Priority
+        </span>
+        
+        @if (Model.ProjectId > 0)
+        {
+            <span class="task-badge task-project">
+                <i class="bi bi-folder"></i> @Model.ProjectDisplay
+            </span>
+        }
+        
+        @if (Model.DueDate.HasValue)
+        {
+            <span class="task-due @(isOverdue ? "overdue" : "")">
+                <i class="bi bi-calendar"></i>
+                @Model.DueDate.Value.ToString("MMM dd")
+            </span>
+        }
+    </div>
+    
+    <div class="task-actions mt-2 d-flex gap-1">
+        <button class="btn btn-sm btn-outline-primary" onclick="editTask(@Model.Id)">
+            <i class="bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger" onclick="deleteTask(@Model.Id)">
+            <i class="bi bi-trash"></i>
+        </button>
+    </div>
+</div>

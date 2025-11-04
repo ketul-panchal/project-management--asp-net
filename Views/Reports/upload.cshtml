@@ -1,0 +1,71 @@
+@model PMS.Models.Report
+@{
+    Layout = "~/Views/Shared/_ProjectManagerLayout.cshtml";
+    ViewData["Title"] = "Upload Report";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm p-4">
+        <h3 class="mb-4">📄 Upload Project Report</h3>
+
+        <form asp-action="Upload" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label asp-for="Id" class="form-label">Select Project</label>
+                <select asp-for="Id" class="form-select" asp-items="ViewBag.ProjectList">
+                    <option value="">-- Select Project --</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label">Report Title</label>
+                <input asp-for="Title" class="form-control" placeholder="Enter report title" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Upload File</label>
+                <input type="file" name="ReportFile" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-upload"></i> Upload
+            </button>
+        </form>
+    </div>
+
+    <div class="card mt-4 shadow-sm p-4">
+        <h4>📊 Uploaded Reports</h4>
+        <table class="table table-bordered mt-3">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>File</th>
+                    <th>Uploaded On</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.ReportList != null)
+                {
+                    int count = 1;
+                    foreach (var report in Model.ReportList)
+                    {
+                        <tr>
+                            <td>@count</td>
+                            <td>@report.Title</td>
+                            <td>
+                                <a href="@Url.Content("~/uploads/reports/" + report.FilePath)" target="_blank">View</a>
+                            </td>
+                            <td>@report.UploadDate.ToString("dd-MM-yyyy")</td>
+                        </tr>
+                        count++;
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="4" class="text-center text-muted">No reports uploaded yet</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

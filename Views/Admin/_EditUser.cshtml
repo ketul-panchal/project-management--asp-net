@@ -1,0 +1,64 @@
+@model PMS.ViewModels.AdminEditUserVM
+@{
+    Layout = null;
+}
+
+<link href="~/css/login.css" rel="stylesheet" />
+
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center">
+
+        <!-- Left Side: Form -->
+        <div class="col-md-6">
+            <h2 class="mb-4">Edit User</h2>
+
+
+
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group mb-3">
+        <label asp-for="FullName" class="form-label"></label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Role" class="form-label"></label>
+        <select asp-for="Role" class="form-select" asp-items="Html.GetEnumSelectList<PMS.Models.Role>()"></select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="ContactNo" class="form-label"></label>
+        <input asp-for="ContactNo" class="form-control" />
+        <span asp-validation-for="ContactNo" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+        </div>
+
+        <!-- Right Side: Image -->
+        <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center">
+            <img src="~/img/register.png"
+                 alt="Register Illustration"
+                 class="img-fluid rounded shadow-lg"
+                 style="max-height: 450px;">
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,19 @@
+@model PMS.Models.Project
+@{
+    ViewData["Title"] = "Project Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Project Details</h2>
+
+<div class="card p-4 shadow">
+    <h3>@Model.ProjectName</h3>
+    <p><b>Description:</b> @Model.Description</p>
+    <p><b>Status:</b> @Model.Status</p>
+    <p><b>Priority:</b> @Model.Priority</p>
+    <p><b>Start Date:</b> @Model.StartDate.ToShortDateString()</p>
+    <p><b>End Date:</b> @Model.EndDate.ToShortDateString()</p>
+    <p><b>Created By:</b> @Model.CreatedBy</p>
+
+    <a asp-action="Projects" class="btn btn-secondary">Back to Projects</a>
+</div>

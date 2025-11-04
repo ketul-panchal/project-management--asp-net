@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "Reset Password Link";
+}
+<div class="container py-5 text-center">
+    <div class="card shadow-lg p-4">
+        <h3 class="text-success mb-3">Password Reset Link Generated</h3>
+        <p>Click the link below to reset your password:</p>
+        
+        <a href="@ViewBag.ResetLink" class="btn btn-primary">
+            Reset Password
+        </a>
+    </div>
+</div>

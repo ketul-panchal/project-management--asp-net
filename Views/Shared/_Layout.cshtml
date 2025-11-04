@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PMS</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PMS.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<!-- ✅ Only render navbar if NOT in Login/Register/ForgotPassword/Dashboard -->
+@if (!(currentController == "Account" && 
+       (currentAction == "Login" || currentAction == "Register" ))
+    && !(currentController == "UserDashboard"||currentController == "AdminDashboard"))
+{
+<header>
+    <nav class="navbar navbar-expand-lg shadow-lg sticky-top"
+         style="background: linear-gradient(135deg, #242a62ff, #212359ff); backdrop-filter: blur(10px);">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand fw-bold text-white d-flex align-items-center" 
+               asp-controller="Home" asp-action="Index"
+               style="font-size: 1.5rem; letter-spacing: 1px; transition: transform 0.3s ease;">
+                <i class="bi bi-kanban-fill me-2 fs-4"></i> 📑PMS
+            </a>
+
+            <!-- Toggler for mobile -->
+            <button class="navbar-toggler text-white border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Menu Items -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav gap-3">
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold px-3 py-2 rounded-3"
+                           asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-house-door-fill me-1"></i> 🏡Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-semibold px-3 py-2 rounded-3"
+                           asp-controller="Home" asp-action="About">
+                            <i class="bi bi-info-circle-fill me-1"></i> 🅰️About
+                        </a>
+                    </li>
+                    
+                    
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <span class="nav-link">Hello, @User.Identity.Name</span>
+                        </li>
+                        <li class="nav-item">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" 
+                                        class="btn btn-danger px-4 py-2 fw-semibold rounded-pill shadow-sm 
+                                               d-flex align-items-center gap-2">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                        
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+}
+
+
+
+
+
+ <style>
+     /* Hover glow effect */
+    .navbar-nav .nav-link:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffeb3b !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Brand hover bounce */
+    .navbar-brand:hover {
+        transform: scale(1.1);
+        color: #ffeb3b !important;
+    }
+
+    /* Active link underline effect */
+    .navbar-nav .nav-link.active {
+        border-bottom: 2px solid #ffeb3b;
+    }
+</style>
+
+@* ------------------------------------------------------------------------------------------------- *@
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+   @{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    bool hideFooter = (controller == "Account" && (action == "Login" || action == "Register"));
+}
+
+@if (!hideFooter)
+{
+    <footer class="bg-dark text-light pt-4">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-md-4 mb-3">
+                    <h5>Project Management System</h5>
+                    <p style="color: white; font-weight: 500;">
+                        Streamline your projects, assign tasks, and track progress all in one place.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-4 mb-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="/Account/Login" class="text-light text-decoration-none">Login</a></li>
+                        <li><a href="/Account/Register" class="text-light text-decoration-none">Register</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Line -->
+            <div class="text-center border-top border-secondary pt-3 mt-3">
+                <p class="mb-0">&copy; 2025 Project Management System | All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+}
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="~/css/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

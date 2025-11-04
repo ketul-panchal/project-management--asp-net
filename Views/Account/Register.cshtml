@@ -1,0 +1,97 @@
+@model PMS.ViewModels.RegisterVM
+
+@{
+    ViewData["Title"] = "Register - PMS";
+}
+<link href="~/css/login.css" rel="stylesheet" />
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center">
+        <!-- Left Side: Image -->
+        <div class="col-md-6 d-none d-md-block text-center">
+            <img src="~/img/register.png" 
+                 alt="Register Illustration" 
+                 class="img-fluid rounded shadow-lg" 
+                 style="max-height: 450px;">
+        </div>
+
+        <!-- Right Side: Registration Form -->
+        <div class="col-md-6">
+            <div class="card shadow-lg rounded-3 border-0">
+                <div class="card-body p-4">
+                    
+                    <!-- Heading -->
+                    <h3 class="text-center mb-4 text-primary fw-bold">
+                        Create Your Account
+                    </h3>
+
+                    <form asp-action="Register" method="post">
+                        <div class="form-group mb-3">
+                            <label class="fw-semibold">Full Name *</label>
+                            <input asp-for="FullName" class="form-control" placeholder="Enter Full Name" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="fw-semibold">Email *</label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="demo@example.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="fw-semibold">Password *</label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="fw-semibold">Confirm Password *</label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="fw-semibold">PhoneNo *</label>
+                            <input asp-for="PhoneNo" type="tel" class="form-control" />
+                            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                        </div>
+                         <div class="form-group mb-3">
+                            <label class="fw-semibold">Gender *</label>
+                            <select asp-for="Gender" class="form-select">
+                                <option value="">-- Select Gender --</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                       
+
+
+                        <div class="form-group mb-3">
+                            <label class="fw-semibold">Role *</label>
+                            <select asp-for="Role" class="form-select">
+                                <option value="">-- Select Role --</option>
+                                <option value="ProjectManager">ProjectManager</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                            <span asp-validation-for="Role" class="text-danger"></span>
+                        </div>
+
+                        <!-- Register Button -->
+                        <button type="submit" class="btn btn-success w-100 py-2">
+                            Register
+                        </button>
+
+                        <!-- Footer -->
+                        <div class="mt-4 text-center">
+                            <p class="text-muted mb-0">
+                                Already have an account?
+                                <a asp-action="Login" class="fw-bold text-decoration-none">Sign in</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

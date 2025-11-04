@@ -1,0 +1,41 @@
+.login-container {
+    height: 100vh;
+}
+
+/* Left side with background image */
+.login-left {
+    background: url('/img/login.png') no-repeat center center;
+    background-size: cover;
+}
+
+.login-left .overlay-text {
+    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent overlay */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.login-right {
+    background-color: #fff;
+    padding: 40px;
+}
+
+.login-form {
+    max-width: 400px;
+    width: 100%;
+}
+.login-form {
+    background: url('/img/project-manager.svg') no-repeat top center;
+    background-size: 80px; /* adjust size */
+    padding-top: 100px; /* push content down so image shows above text */
+}
+.d-flex{
+    align-items: right;
+    justify-content: right;
+    padding-right: 20px;
+    margin-left: auto !important; 
+            
+}
+.nav-link {
+            margin-left: auto !important; 
+}
+

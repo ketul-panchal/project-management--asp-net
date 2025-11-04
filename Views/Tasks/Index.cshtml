@@ -1,0 +1,337 @@
+@* @using PMS.Models
+@using TaskStatusEnum = PMS.Models.TaskStatus
+@model IEnumerable<PMS.Controllers.TasksController.TaskListItemVm>
+
+@{
+    ViewData["Title"] = "Tasks";
+    Layout = "~/Views/Shared/_ProjectManagerLayout.cshtml";
+
+    // Access query parameters through ViewContext
+    var query = ViewContext.HttpContext.Request.Query;
+
+    var qSearch   = query["search"].ToString()   ?? "";
+    var qStatus   = query["status"].ToString()   ?? "";
+    var qPriority = query["priority"].ToString() ?? "";
+    var qProject  = query["projectId"].ToString()?? "";
+
+    var projects = ViewBag.Projects as IEnumerable<Project> ?? Enumerable.Empty<Project>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="mb-1">Tasks</h3>
+        <div class="text-muted">Manage and track your tasks</div>
+    </div>
+    <div>
+        <a href="/Tasks/Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> New Task
+        </a>
+    </div>
+</div>
+
+<div class="card p-3 mb-4">
+    <form method="get" class="row g-3">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text">🔍</span>
+                <input type="text" name="search" class="form-control" placeholder="Search tasks..."
+                       value="@qSearch" />
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <select name="status" class="form-select">
+                <option value="">All Statuses</option>
+                @foreach (TaskStatusEnum s in Enum.GetValues(typeof(TaskStatusEnum)))
+                {
+                    var isSelected = qStatus.Equals(s.ToString(), StringComparison.OrdinalIgnoreCase);
+                    <option value="@s" selected="@isSelected">@s</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="priority" class="form-select">
+                <option value="">All Priorities</option>
+                @foreach (TaskPriority p in Enum.GetValues(typeof(TaskPriority)))
+                {
+                    var isSelected = qPriority.Equals(p.ToString(), StringComparison.OrdinalIgnoreCase);
+                    <option value="@p" selected="@isSelected">@p</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select name="projectId" class="form-select">
+                <option value="">All Projects</option>
+                @foreach (var project in projects)
+                {
+                    var isSelected = qProject == project.Id.ToString();
+                    <option value="@project.Id" selected="@isSelected">@project.ProjectName</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-1 d-grid">
+            <button class="btn btn-outline-secondary" type="submit">Filter</button>
+        </div>
+    </form>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Title</th>
+                    <th style="width: 220px;">Project</th>
+                    <th style="width: 140px;">Status</th>
+                    <th style="width: 120px;">Priority</th>
+                    <th style="width: 140px;">Due</th>
+                    <th style="width: 160px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">@task.Title</div>
+                            <div class="small text-muted">@task.Description</div>
+                        </td>
+                        <td>@task.ProjectDisplay</td>
+                        <td>
+                            <span class="badge bg-@(task.Status == TaskStatusEnum.Done ? "success" : task.Status == TaskStatusEnum.InProgress ? "primary" : task.Status == TaskStatusEnum.Blocked ? "danger" : "secondary")">
+                                @task.Status
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-@(task.Priority == TaskPriority.Urgent ? "danger" : task.Priority == TaskPriority.High ? "warning" : task.Priority == TaskPriority.Medium ? "info" : "secondary")">
+                                @task.Priority
+                            </span>
+                        </td>
+                        <td>
+                            @if (task.DueDate.HasValue)
+                            {
+                                @task.DueDate.Value.ToString("dd-MMM-yyyy")
+                            }
+                            else
+                            {
+                                <text>-</text>
+                            }
+                        </td>
+                        <td>
+                            <a href="/Tasks/Edit/@task.Id" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <form method="post" action="/Tasks/Delete/@task.Id" class="d-inline"
+                                  onsubmit="return confirm('Delete this task?');">
+                                @Html.AntiForgeryToken()
+                                <button class="btn btn-sm btn-outline-danger" type="submit">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="text-center py-5 text-muted">
+        <div class="display-6 mb-2">No tasks found</div>
+        <p>Try adjusting filters or create your first task.</p>
+        <a href="/Tasks/Create" class="btn btn-primary">Create Task</a>
+    </div>
+} *@
+
+
+@using PMS.Models
+@using TaskStatusEnum = PMS.Models.TaskStatus
+@model IEnumerable<PMS.Controllers.TasksController.TaskListItemVm>
+
+@{
+      ViewData["Title"] = "Tasks";
+    // Dynamically set layout based on user role
+    Layout = User.IsInRole("Admin") ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_ProjectManagerLayout.cshtml";
+
+    // Access query parameters through ViewContext
+    var query = ViewContext.HttpContext.Request.Query;
+
+    var qSearch   = query["search"].ToString()   ?? "";
+    var qStatus   = query["status"].ToString()   ?? "";
+    var qPriority = query["priority"].ToString() ?? "";
+    var qProject  = query["projectId"].ToString()?? "";
+
+    var projects = ViewBag.Projects as IEnumerable<Project> ?? Enumerable.Empty<Project>();
+}
+
+<style>
+    .view-toggle-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        transition: all 0.2s;
+    }
+    
+    .view-toggle-btn.active {
+        background-color: var(--bs-primary);
+        color: white;
+        border-color: var(--bs-primary);
+    }
+    
+    .view-toggle-container {
+        display: flex;
+        gap: 0.5rem;
+        background: #f8f9fa;
+        padding: 0.25rem;
+        border-radius: 0.5rem;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="mb-1">Tasks</h3>
+        <div class="text-muted">Manage and track your tasks</div>
+    </div>
+    <div class="d-flex gap-2">
+        <!-- View Toggle Buttons -->
+        <div class="view-toggle-container">
+            <a href="/Tasks" class="btn btn-sm view-toggle-btn active">
+                <i class="bi bi-table"></i> Table
+            </a>
+            <a href="/Tasks/Kanban" class="btn btn-sm btn-outline-secondary view-toggle-btn">
+                <i class="bi bi-kanban"></i> Board
+            </a>
+        </div>
+        
+        <!-- New Task Button -->
+        <a href="/Tasks/Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> New Task
+        </a>
+    </div>
+</div>
+
+<div class="card p-3 mb-4">
+    <form method="get" class="row g-3">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text">🔍</span>
+                <input type="text" name="search" class="form-control" placeholder="Search tasks..."
+                       value="@qSearch" />
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <select name="status" class="form-select">
+                <option value="">All Statuses</option>
+                @foreach (TaskStatusEnum s in Enum.GetValues(typeof(TaskStatusEnum)))
+                {
+                    var isSelected = qStatus.Equals(s.ToString(), StringComparison.OrdinalIgnoreCase);
+                    <option value="@s" selected="@isSelected">@s</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="priority" class="form-select">
+                <option value="">All Priorities</option>
+                @foreach (TaskPriority p in Enum.GetValues(typeof(TaskPriority)))
+                {
+                    var isSelected = qPriority.Equals(p.ToString(), StringComparison.OrdinalIgnoreCase);
+                    <option value="@p" selected="@isSelected">@p</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <select name="projectId" class="form-select">
+                <option value="">All Projects</option>
+                @foreach (var project in projects)
+                {
+                    var isSelected = qProject == project.Id.ToString();
+                    <option value="@project.Id" selected="@isSelected">@project.ProjectName</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-1 d-grid">
+            <button class="btn btn-outline-secondary" type="submit">Filter</button>
+        </div>
+    </form>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Title</th>
+                    <th style="width: 220px;">Project</th>
+                    <th style="width: 140px;">Status</th>
+                    <th style="width: 120px;">Priority</th>
+                    <th style="width: 140px;">Due</th>
+                    <th style="width: 160px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">@task.Title</div>
+                            <div class="small text-muted">@task.Description</div>
+                        </td>
+                        <td>@task.ProjectDisplay</td>
+                        <td>
+                            <span class="badge bg-@(task.Status == TaskStatusEnum.Done ? "success" : task.Status == TaskStatusEnum.InProgress ? "primary" : task.Status == TaskStatusEnum.Blocked ? "danger" : "secondary")">
+                                @task.Status
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-@(task.Priority == TaskPriority.Urgent ? "danger" : task.Priority == TaskPriority.High ? "warning" : task.Priority == TaskPriority.Medium ? "info" : "secondary")">
+                                @task.Priority
+                            </span>
+                        </td>
+                        <td>
+                            @if (task.DueDate.HasValue)
+                            {
+                                @task.DueDate.Value.ToString("dd-MMM-yyyy")
+                            }
+                            else
+                            {
+                                <text>-</text>
+                            }
+                        </td>
+                        <td>
+                            <a href="/Tasks/Edit/@task.Id" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <form method="post" action="/Tasks/Delete/@task.Id" class="d-inline"
+                                  onsubmit="return confirm('Delete this task?');">
+                                @Html.AntiForgeryToken()
+                                <button class="btn btn-sm btn-outline-danger" type="submit">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="text-center py-5 text-muted">
+        <div class="display-6 mb-2">No tasks found</div>
+        <p>Try adjusting filters or create your first task.</p>
+        <a href="/Tasks/Create" class="btn btn-primary">Create Task</a>
+    </div>
+}

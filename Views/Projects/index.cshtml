@@ -1,0 +1,155 @@
+@model IEnumerable<PMS.Models.Project>
+
+@{
+    ViewData["Title"] = "Projects";
+    Layout = "~/Views/Shared/_ProjectManagerLayout.cshtml";
+}
+
+<h2>Projects</h2>
+
+<button class="btn btn-primary mb-3" onclick="openCreateModal()">+ New Project</button>
+
+<div class="container mt-4">
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var project in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <!-- Project Title -->
+                            <h5 class="card-title fw-bold">@project.ProjectName</h5>
+
+                            <!-- Project Description -->
+                            <p class="card-text text-muted">
+                                @project.Description
+                            </p>
+
+                            <!-- Status & Priority -->
+                            <span class="badge bg-@(project.Status == "active" ? "success" : "secondary")">
+                                @project.Status
+                            </span>
+                            <span class="badge bg-@(project.Priority == "high" ? "danger" : project.Priority == "medium" ? "warning" : "info")">
+                                @project.Priority
+                            </span>
+
+                            <!-- Progress Bar -->
+                            <div class="mt-3">
+                                <label class="small text-muted">Progress</label>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+
+                            <!-- Members & Dates -->
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <small class="text-muted"><i class="bi bi-people"></i> 0 members</small>
+                                <small class="text-muted"><i class="bi bi-calendar"></i> @project.EndDate.ToString("MMM dd, yyyy")</small>
+                            </div>
+                        </div>
+                        <!-- Card Footer -->
+                        <div class="card-footer bg-white border-0 text-end">
+                            <button class="btn btn-sm btn-warning" onclick="openEditModal(@project.Id)">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteProject(@project.Id)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <p class="text-center text-muted">No projects found. Create your first project!</p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="projectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Check if jQuery is loaded
+        if (typeof jQuery === 'undefined') {
+            console.error('jQuery is not loaded!');
+        } else {
+            console.log('jQuery version:', jQuery.fn.jquery);
+        }
+
+        // Open Create Project Modal
+        function openCreateModal() {
+            console.log('Opening create modal...');
+            
+            $.ajax({
+                url: '/Projects/Create',
+                type: 'GET',
+                success: function (data) {
+                    console.log('Data received:', data);
+                    $("#projectModal .modal-content").html(data);
+                    
+                    // Use Bootstrap 5 method to show modal
+                    var myModal = new bootstrap.Modal(document.getElementById('projectModal'));
+                    myModal.show();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading create form:', error);
+                    console.error('Status:', status);
+                    console.error('Response:', xhr.responseText);
+                    alert('Error loading create form: ' + error);
+                }
+            });
+        }
+
+        // Open Edit Project Modal
+        function openEditModal(id) {
+            console.log('Opening edit modal for ID:', id);
+            
+            $.ajax({
+                url: '/Projects/Edit/' + id,
+                type: 'GET',
+                success: function (data) {
+                    console.log('Edit data received');
+                    $("#projectModal .modal-content").html(data);
+                    
+                    // Use Bootstrap 5 method to show modal
+                    var myModal = new bootstrap.Modal(document.getElementById('projectModal'));
+                    myModal.show();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading edit form:', error);
+                    alert('Error loading edit form: ' + error);
+                }
+            });
+        }
+
+        // Delete Project
+        function deleteProject(id) {
+            if (confirm("Are you sure you want to delete this project?")) {
+                $.ajax({
+                    url: "/Projects/Delete",
+                    type: "POST",
+                    data: { id: id },
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload();
+                        } else {
+                            alert("Error deleting project: " + (response.message || "Unknown error"));
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error('Delete error:', xhr);
+                        alert("Error: " + xhr.status + " " + xhr.statusText);
+                    }
+                });
+            }
+        }
+    </script>
+}

@@ -1,0 +1,75 @@
+@model PMS.ViewModels.AdminCreateUserVM
+@{
+    Layout = null;
+}
+
+<h2 class="mb-4">Create User</h2>
+<link href="~/css/login.css" rel="stylesheet" />
+
+<div class="container py-5">
+    <div class="row justify-content-center align-items-center">
+        
+        <!-- Left Side: Form -->
+
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group mb-3">
+        <label asp-for="FullName" class="form-label"></label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Role" class="form-label"></label>
+        <select asp-for="Role" class="form-select" asp-items="Html.GetEnumSelectList<PMS.Models.Role>()"></select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="ContactNo" class="form-label"></label>
+        <input asp-for="ContactNo" class="form-control" />
+        <span asp-validation-for="ContactNo" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">Create</button>
+</form>
+     </div>
+        </div>
+
+        <!-- Right Side: Image -->
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <img src="~/img/register.png" 
+                 alt="Register Illustration" 
+                 class="img-fluid rounded shadow-lg" 
+                 style="max-height: 350px; object-fit: contain;">
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    function openAddUserModal() {
+    $("#userModalLabel").text("Add New User");
+    $("#userModalBody").load("/Admin/Create"); // Controller action that returns Create.cshtml
+}
+
+function openEditUserModal(id) {
+    $("#userModalLabel").text("Edit User");
+    $("#userModalBody").load("/Admin/Edit/" + id); // Loads Edit.cshtml
+}
+}

@@ -1,0 +1,88 @@
+@model PMS.Models.TeamMember
+
+@{
+    ViewData["Title"] = "Add Team Member";
+    // Dynamically set layout based on user role
+    Layout = User.IsInRole("Admin") ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_ProjectManagerLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="mb-1">Add Team Member</h2>
+            <p class="text-muted">Fill in the details to add a new team member</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="row g-4">
+                        <!-- Full Name -->
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter full name" required>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="email@example.com" required>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Role -->
+                        <div class="col-md-6">
+                            <label asp-for="Role" class="form-label">Role <span class="text-danger">*</span></label>
+                            <select asp-for="Role" class="form-select" required>
+                                <option value="">Select Role</option>
+                                <option value="Project Manager">Project Manager</option>
+                                <option value="Developer" selected>Developer</option>
+                                <option value="Designer">Designer</option>
+                                <option value="Tester">Tester</option>
+                                <option value="DevOps">DevOps</option>
+                            </select>
+                            <span asp-validation-for="Role" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label">Phone</label>
+                            <input asp-for="Phone" type="tel" class="form-control" placeholder="+1 234-567-8900">
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <label asp-for="Status" class="form-label">Status</label>
+                            <select asp-for="Status" class="form-select">
+                                <option value="active" selected>Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="on-leave">On Leave</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-3 justify-content-end pt-4 border-top mt-4">
+                        <a href="/Team" class="btn btn-secondary">
+                            <i class="bi bi-x-lg me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-2"></i>Add Member
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

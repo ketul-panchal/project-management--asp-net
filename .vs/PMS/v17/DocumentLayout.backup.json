@@ -1,0 +1,74 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\D Drive\\VB.NET\\Project-management-system-main\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{758E0C95-FADF-7327-B14F-A83FB26F432D}|PMS.csproj|d:\\d drive\\vb.net\\project-management-system-main\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{758E0C95-FADF-7327-B14F-A83FB26F432D}|PMS.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{758E0C95-FADF-7327-B14F-A83FB26F432D}|PMS.csproj|d:\\d drive\\vb.net\\project-management-system-main\\sqlquery.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
+      "RelativeMoniker": "D:0:0:{758E0C95-FADF-7327-B14F-A83FB26F432D}|PMS.csproj|solutionrelative:sqlquery.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{758E0C95-FADF-7327-B14F-A83FB26F432D}|PMS.csproj|d:\\d drive\\vb.net\\project-management-system-main\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{758E0C95-FADF-7327-B14F-A83FB26F432D}|PMS.csproj|solutionrelative:appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{758E0C95-FADF-7327-B14F-A83FB26F432D}|PMS.csproj|d:\\d drive\\vb.net\\project-management-system-main\\sqlquery.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame",
+      "RelativeMoniker": "D:0:0:{758E0C95-FADF-7327-B14F-A83FB26F432D}|PMS.csproj|solutionrelative:sqlquery.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|CodeFrame"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SqlQuery.sql ",
+              "DocumentMoniker": "D:\\D Drive\\VB.NET\\Project-management-system-main\\SqlQuery.sql",
+              "RelativeDocumentMoniker": "SqlQuery.sql",
+              "ToolTip": "D:\\D Drive\\VB.NET\\Project-management-system-main\\SqlQuery.sql",
+              "RelativeToolTip": "SqlQuery.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-11-01T12:42:51.231Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\D Drive\\VB.NET\\Project-management-system-main\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\D Drive\\VB.NET\\Project-management-system-main\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T12:42:21.566Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "D:\\D Drive\\VB.NET\\Project-management-system-main\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "appsettings.Development.json",
+              "ToolTip": "D:\\D Drive\\VB.NET\\Project-management-system-main\\appsettings.Development.json",
+              "RelativeToolTip": "appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-01T12:42:07.294Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

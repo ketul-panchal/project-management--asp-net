@@ -1,0 +1,82 @@
+@using PMS.Models
+@using TaskStatusEnum = PMS.Models.TaskStatus
+@model dynamic
+
+<div class="modal-body">
+    <form id="taskForm" method="post" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="Id" value="@(Model?.Id ?? 0)" />
+
+        <div class="row g-3">
+            <div class="col-md-8">
+                <label class="form-label">Title</label>
+                <input name="Title" class="form-control" value="@(Model?.Title ?? "")" required />
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Project</label>
+                <select name="ProjectId" class="form-select">
+                    <option value="">-- Select Project --</option>
+                    @{
+                        var projects = ViewBag.Projects as IEnumerable<Project> ?? Enumerable.Empty<Project>();
+                        var currentPid = (int?)(Model?.ProjectId);
+                        foreach (var project in projects)
+                        {
+                            var isSelected = currentPid.HasValue && currentPid.Value == project.Id;
+                            <option value="@project.Id" selected="@isSelected">@project.ProjectName</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Description</label>
+                <textarea name="Description" class="form-control" rows="4">@(Model?.Description ?? "")</textarea>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Status</label>
+                <select name="Status" class="form-select">
+                    @foreach (TaskStatusEnum s in Enum.GetValues(typeof(TaskStatusEnum)))
+                    {
+                        var isSelected = (Model?.Status?.ToString() ?? "") == s.ToString();
+                        <option value="@s" selected="@isSelected">@s</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Priority</label>
+                <select name="Priority" class="form-select">
+                    @{
+                        // If you have an enum PMS.Models.TaskPriority, alias it similarly:
+                        // @using TaskPriorityEnum = PMS.Models.TaskPriority
+                        // For safety (in case you don't), we'll just render common priorities:
+                        string[] priorities = new[] { "Low", "Medium", "High", "Critical" };
+                        var curPrio = (Model?.Priority?.ToString() ?? "");
+                        foreach (var p in priorities)
+                        {
+                            var isSelected = curPrio.Equals(p, StringComparison.OrdinalIgnoreCase);
+                            <option value="@p" selected="@isSelected">@p</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Due Date</label>
+                <input type="date" name="DueDate"
+                       class="form-control"
+                       value="@(Model?.DueDate is DateTime d ? d.ToString("yyyy-MM-dd") : "")" />
+            </div>
+
+            <div class="col-12 d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check2"></i> Save
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
