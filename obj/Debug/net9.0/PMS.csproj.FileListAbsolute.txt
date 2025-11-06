@@ -1271,3 +1271,4 @@ D:\D Drive\VB.NET\Project-management-system-main\obj\Debug\net9.0\refint\PMS.dll
 D:\D Drive\VB.NET\Project-management-system-main\obj\Debug\net9.0\PMS.pdb
 D:\D Drive\VB.NET\Project-management-system-main\obj\Debug\net9.0\PMS.genruntimeconfig.cache
 D:\D Drive\VB.NET\Project-management-system-main\obj\Debug\net9.0\ref\PMS.dll
+D:\D Drive\VB.NET\Project-management-system-main\obj\Debug\net9.0\PMS.sourcelink.json

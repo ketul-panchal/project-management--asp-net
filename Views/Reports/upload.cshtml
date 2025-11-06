@@ -1,71 +1,119 @@
 @model PMS.Models.Report
 @{
-    Layout = "~/Views/Shared/_ProjectManagerLayout.cshtml";
     ViewData["Title"] = "Upload Report";
+    // Dynamically set layout based on user role
+    Layout = User.IsInRole("Admin") ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_ProjectManagerLayout.cshtml";
 }
 
-<div class="container mt-5">
-    <div class="card shadow-sm p-4">
-        <h3 class="mb-4">📄 Upload Project Report</h3>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-upload"></i> Upload New Report</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Upload" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
 
-        <form asp-action="Upload" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label asp-for="Id" class="form-label">Select Project</label>
-                <select asp-for="Id" class="form-select" asp-items="ViewBag.ProjectList">
-                    <option value="">-- Select Project --</option>
-                </select>
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">
+                                Report Title <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Title" class="form-control form-control-lg" 
+                                   placeholder="e.g., Q1 2024 Progress Report" required />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ReportType" class="form-label fw-bold">
+                                Report Type <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="ReportType" class="form-select form-select-lg" required>
+                                <option value="">-- Select Type --</option>
+                                <option value="Overview">📊 Overview</option>
+                                <option value="Progress">📈 Progress Report</option>
+                                <option value="Financial">💰 Financial Report</option>
+                                <option value="Technical">⚙️ Technical Documentation</option>
+                                <option value="Meeting Minutes">📝 Meeting Minutes</option>
+                                <option value="Status Update">🔄 Status Update</option>
+                                <option value="Other">📄 Other</option>
+                            </select>
+                            <span asp-validation-for="ReportType" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ActiveProjects" class="form-label">
+                                    <i class="bi bi-folder text-success"></i> Active Projects
+                                </label>
+                                <input asp-for="ActiveProjects" type="number" class="form-control" 
+                                       value="0" min="0" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="OverdueTasks" class="form-label">
+                                    <i class="bi bi-exclamation-triangle text-danger"></i> Overdue Tasks
+                                </label>
+                                <input asp-for="OverdueTasks" type="number" class="form-control" 
+                                       value="0" min="0" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TeamMembers" class="form-label">
+                                    <i class="bi bi-people text-info"></i> Team Members
+                                </label>
+                                <input asp-for="TeamMembers" type="number" class="form-control" 
+                                       value="0" min="0" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CompletionRate" class="form-label">
+                                    <i class="bi bi-percent text-primary"></i> Completion Rate (%)
+                                </label>
+                                <input asp-for="CompletionRate" type="number" class="form-control" 
+                                       value="0" min="0" max="100" />
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="File" class="form-label fw-bold">
+                                Upload Document <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="File" type="file" class="form-control form-control-lg" 
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt" required />
+                            <div class="form-text">
+                                <i class="bi bi-info-circle"></i>
+                                Allowed formats: <strong>PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT</strong> 
+                                (Max size: 10MB)
+                            </div>
+                            <span asp-validation-for="File" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                            <a asp-action="Index" class="btn btn-secondary btn-lg">
+                                <i class="bi bi-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-upload"></i> Upload Report
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="mb-3">
-                <label asp-for="Title" class="form-label">Report Title</label>
-                <input asp-for="Title" class="form-control" placeholder="Enter report title" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Upload File</label>
-                <input type="file" name="ReportFile" class="form-control" />
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-upload"></i> Upload
-            </button>
-        </form>
-    </div>
-
-    <div class="card mt-4 shadow-sm p-4">
-        <h4>📊 Uploaded Reports</h4>
-        <table class="table table-bordered mt-3">
-            <thead class="table-light">
-                <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>File</th>
-                    <th>Uploaded On</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null && Model.ReportList != null)
-                {
-                    int count = 1;
-                    foreach (var report in Model.ReportList)
-                    {
-                        <tr>
-                            <td>@count</td>
-                            <td>@report.Title</td>
-                            <td>
-                                <a href="@Url.Content("~/uploads/reports/" + report.FilePath)" target="_blank">View</a>
-                            </td>
-                            <td>@report.UploadDate.ToString("dd-MM-yyyy")</td>
-                        </tr>
-                        count++;
-                    }
-                }
-                else
-                {
-                    <tr><td colspan="4" class="text-center text-muted">No reports uploaded yet</td></tr>
-                }
-            </tbody>
-        </table>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Show file name when selected
+        document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            if (fileName) {
+                console.log('Selected file:', fileName);
+            }
+        });
+    </script>
+}

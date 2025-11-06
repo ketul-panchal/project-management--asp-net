@@ -12,6 +12,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<PMS.Data.AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AppDBContext")));
 
+
+// Add this in Program.cs before builder.Build()
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+
 // Cookie authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -47,6 +58,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+// After var app = builder.Build();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
